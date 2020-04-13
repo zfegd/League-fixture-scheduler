@@ -1,14 +1,18 @@
 import random
-import itertools
 
-# schedules one fixture between teams only, no home and away
 def execute_scheduler(numteams, homeandaway):
     teams = [i for i in range(1,numteams+1)]
-    numrounds = numteams - 1
     matchweeks = []
-    tophalf = teams[:int(numteams/2)]
-    bottomhalf = teams[int(numteams/2):]
-    # todo- check if numteams odd or even
+    # check if numteams odd or even
+    if numteams % 2 is 1:
+        teams += [None]
+        numrounds = numteams
+        tophalf = teams[:int((numteams+1)/2)]
+        bottomhalf = teams[int((numteams+1)/2):]
+    else:
+        numrounds = numteams - 1
+        tophalf = teams[:int(numteams/2)]
+        bottomhalf = teams[int(numteams/2):]
     # implements circle method
     for i in range(numrounds):
         thismatchweek = list(zip(tophalf,bottomhalf))
@@ -32,10 +36,11 @@ def print_matchweeks(matchweeks):
 def print_matchweek(matchweek, weekno):
     print("MATCHWEEK " + str(weekno))
     for (a,b) in matchweek:
-        print(str(a) + " VS " + str(b))
+        if a is not None and b is not None:
+            print(str(a) + " VS " + str(b))
 
 
-
-matchweeks = execute_scheduler(4, True)
+matchweeks = execute_scheduler(5, False)
+# matchweeks = execute_scheduler(4, True)
 # matchweeks = execute_scheduler(10, False)
 print_matchweeks(matchweeks)

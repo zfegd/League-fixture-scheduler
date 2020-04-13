@@ -39,8 +39,10 @@ def print_matchweek(matchweek, weekno):
         if a is not None and b is not None:
             print(str(a) + " VS " + str(b))
 
+def update_player_names():
+    pass
 
-matchweeks = execute_scheduler(5, False)
+matchweeks = execute_scheduler(16, False)
 # matchweeks = execute_scheduler(4, True)
 # matchweeks = execute_scheduler(10, False)
 print_matchweeks(matchweeks)

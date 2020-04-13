@@ -2,41 +2,40 @@ import random
 import itertools
 
 # schedules one fixture between teams only, no home and away
-def execute_scheduler(numteams):
+def execute_scheduler(numteams, homeandaway):
     teams = [i for i in range(1,numteams+1)]
     numrounds = numteams - 1
     matchweeks = []
-    firsthalfteams = teams[:int(numteams/2)]
-    secondhalfteams = teams[:int(numteams/2)]
+    tophalf = teams[:int(numteams/2)]
+    bottomhalf = teams[int(numteams/2):]
     # todo- check if numteams odd or even
-    # naive implementation
-    for i in range(int(numteams/2)):
-        thisweekaway = shift_list(secondhalfteams,i)
-        thismatchweek = list(zip(firsthalfteams,thisweekaway))
+    # implements circle method
+    for i in range(numrounds):
+        thismatchweek = list(zip(tophalf,bottomhalf))
+        shiftedhalfitem = tophalf[-1]
+        tophalf = tophalf[:1] + bottomhalf[:1] + tophalf[1:-1]
+        bottomhalf = bottomhalf[1:] + [shiftedhalfitem]
         matchweeks += [thismatchweek]
-    # todo - schedule the rest
+    if homeandaway:
+        newmatchweeks = []
+        for matchweek in matchweeks:
+            newweek = [(b,a) for (a,b) in matchweek]
+            newmatchweeks += [newweek]
+        matchweeks += newmatchweeks
     random.shuffle(matchweeks)
     return matchweeks
 
-def shift_list(list, num_shifts):
-    numitems = len(list)
-    return list[-num_shifts:] + list[:-num_shifts]
+def print_matchweeks(matchweeks):
+    for i in range(len(matchweeks)):
+        print_matchweek(matchweeks[i], i+1)
 
-def greedy_scheduler(numteams):
-    teams = [i for i in range(1,numteams+1)]
-    numrounds = numteams - 1
-    matchweeks = []
-    matches_left = list(itertools.product(teams,teams))
-    for i in range(1,numteams+1):
-        matches_left.remove((i,i))
-    pass
-
-def schedule_matchweek(matches_left, teams):
-    thismatchweek = []
-    while len(teams) != 0:
-        # pass
-    return thismatchweek, matches_left
+def print_matchweek(matchweek, weekno):
+    print("MATCHWEEK " + str(weekno))
+    for (a,b) in matchweek:
+        print(str(a) + " VS " + str(b))
 
 
 
-print(execute_scheduler(10))
+matchweeks = execute_scheduler(4, True)
+# matchweeks = execute_scheduler(10, False)
+print_matchweeks(matchweeks)
